@@ -1,24 +1,50 @@
 import React from 'react';
 import logo from './logo.svg';
+import { Line, Bar } from 'react-chartjs-2';
+import { dischargeCycles } from './data/data';
+import { getDischargeData, getDischargeCycle } from './helper';
 import './App.css';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 function App() {
+
+  getDischargeData(dischargeCycles);
+  let key=1;
+  const disCycle = getDischargeCycle(dischargeCycles);
+  const chartData = {
+    labels : disCycle.map(dc=> dc[0] ),
+    datasets:[
+      {
+        label:'km',
+        data: disCycle.map(dc=> dc[1]),
+        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      }
+    ]
+  };
+
+  console.log('chartData:', chartData);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App">     
+      <Bar 
+        data={chartData}
+      />
     </div>
   );
 }
